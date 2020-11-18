@@ -1,0 +1,96 @@
+@page "/login"
+@inject IAuthService AuthService
+@inject NavigationManager NavigationManager
+
+@if (ShowErrors)
+{
+    <div class="alert alert-danger" role="alert">
+        <p>@Error</p>
+    </div>
+}
+
+<div class="col-sm-6 col-md-4 offset-md-4">
+    <div class="row justify-content-center align-items-center" style="height:100vh">
+        <div class="card">
+            <div class="card-body">
+                <img id="profile-img" class="profile-img-card" src="//ssl.gstatic.com/accounts/ui/avatar_2x.png" />
+                <EditForm Model="loginModel" OnValidSubmit="HandleValidSubmit" @onreset="HandleReset">
+                    <DataAnnotationsValidator />
+                    <ValidationSummary />
+
+                    <div class="form-signin">
+                        <div class="input-group mb-2 mr-sm-2">
+                            <div class="input-group-prepend">
+                                <div class="input-group-text">
+                                    <span class="oi oi-person" aria-hidden="true"></span>
+                                </div>
+                            </div>
+                            <InputText class="form-control" @bind-Value="@loginModel.Email" placeholder="Email"/>
+                            @* <ValidationMessage For="@( () => loginModel.Email )" /> *@
+                        </div>
+                        
+                        <br>
+
+                        <div class="input-group mb-2 mr-sm-2">
+                            <div class="input-group-prepend">
+                                <div class="input-group-text">
+                                    <span class="oi oi-lock-locked" aria-hidden="true"></span>
+                                </div>
+                            </div>
+                            <InputText type="password" class="form-control" @bind-Value="@loginModel.Password" placeholder="Senha"/>
+                            @* <ValidationMessage For="@( () => loginModel.Password )" /> *@
+                        </div>
+
+                        <br>
+
+                        <button class="btn btn-success btn-block" type="submit">Entrar</button>
+                    </div>
+                </EditForm>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .profile-img-card {
+        width: 96px;
+        height: 96px;
+        margin: 0 auto 10px;
+        display: block;
+        -moz-border-radius: 50%;
+        -webkit-border-radius: 50%;
+        border-radius: 50%;
+    }
+</style>
+
+@code {
+
+    private LoginModel loginModel = new LoginModel();
+    private EditContext editContext { get; set; }
+    private bool ShowErrors;
+    private string Error = "";
+
+    private async Task HandleValidSubmit()
+    {
+        ShowErrors = false;
+
+        var result = await AuthService.Login(loginModel);
+
+        if (result.Successful)
+        {
+            NavigationManager.NavigateTo("/");
+        }
+        else
+        {
+            Error = result.Error;
+            ShowErrors = true;
+        }
+    }
+
+    private void HandleReset()
+    {
+        loginModel = new LoginModel();
+        editContext = new EditContext(loginModel);
+    }
+
+}

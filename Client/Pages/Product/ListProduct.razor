@@ -1,0 +1,54 @@
+@page "/produto/list"
+@using System.Net.Http
+@inject HttpClient Http
+@inject NavigationManager NavigationManager
+
+<h3>Produtos</h3>
+
+<div class="card-body">
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">Nome</th>
+                <th scope="col">Preço</th>
+                <th scope="col">Categoria</th>
+                <th scope="col"></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in productList)
+            {
+            <tr>
+                <td>@item.Name</td>
+                <td>@item.Price</td>
+                <td>@item.Category.Description</td>
+                <td>
+                    <a href="/produto/EditProduto/@item.Id.ToString()"><button class="btn btn-success">Editar</button></a>
+                    <button class="btn btn-danger" @onclick="@(() => DeleteProduct(item.Id))">Deletar</button>
+                </td>
+            </tr>
+            }   
+        </tbody>
+    </table>
+</div>
+
+@code {
+
+    private List<Product> productList = new List<Product>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        var products = await Http.GetFromJsonAsync<List<Product>>("/Product/List");
+        foreach (var item in products)
+        {
+            item.Category = await Http.GetFromJsonAsync<Category>($"/Category/GetById?id={item.Id}");
+            productList.Add(item);
+        }
+    }
+
+    private async Task DeleteProduct(int itemId)
+    {
+        await Http.DeleteAsync("/Product/Delete/"+itemId);
+        NavigationManager.NavigateTo("/");
+    }
+}
