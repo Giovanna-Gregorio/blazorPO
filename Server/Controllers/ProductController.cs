@@ -1,6 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using BlazorPO.Shared;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -34,6 +35,7 @@ namespace BlazorPO.Server.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         [Route("Create")]
         public async Task<ActionResult> Post([FromBody] Product product)
         {
