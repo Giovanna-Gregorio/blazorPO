@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BlazorPO.Server.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20201118124922_InitialCreate")]
+    [Migration("20201118212359_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
