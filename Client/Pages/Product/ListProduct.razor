@@ -22,10 +22,10 @@
                 <td>@item.Name</td>
                 <td>@item.Price</td>
                 <td>@item.Category.Description</td>
-                <td>
+                @* <td>
                     <a href="/produto/EditProduto/@item.Id.ToString()"><button class="btn btn-success">Editar</button></a>
                     <button class="btn btn-danger" @onclick="@(() => DeleteProduct(item.Id))">Deletar</button>
-                </td>
+                </td> *@
             </tr>
             }   
         </tbody>
