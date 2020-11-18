@@ -6,6 +6,13 @@
 
 <p>This component demonstrates fetching data from the server.</p>
 
+@if(alerta == true)
+{
+    <div class="alert alert-danger" role="alert">
+        Faça o <a href="/Register">Login</a> para acessar a página.
+    </div>
+}
+
 @if (forecasts == null)
 {
     <p><em>Loading...</em></p>
@@ -37,9 +44,19 @@ else
 
 @code {
     private WeatherForecast[] forecasts;
+    private bool alerta = false;
 
     protected override async Task OnInitializedAsync()
     {
-        forecasts = await Http.GetFromJsonAsync<WeatherForecast[]>("WeatherForecast");
+        try
+        {
+            forecasts = await Http.GetFromJsonAsync<WeatherForecast[]>("WeatherForecast");
+            alerta = false;
+        }
+        catch
+        {
+            alerta = true;
+        }
+        
     }
 }
